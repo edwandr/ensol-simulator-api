@@ -1,0 +1,10 @@
+service: ensol-simulator-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+
+plugins:
+  - serverless-plugin-typescript
