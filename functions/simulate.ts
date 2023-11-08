@@ -1,23 +1,51 @@
 import { Callback, Context, Handler } from 'aws-lambda';
+import { computeYearlyConsumptionInKWh } from '../services/comsuption';
+import { computePanelYearlyProductionInKWh } from '../services/production';
+import { getLocationMeanYearlyRadiation } from '../third-parties/pvgis';
+import { RoofInclination, RoofOrientation } from '../types';
 
 interface SimulateQueryParams {
   monthlyBillInEuro: number;
   latitude: number;
   longitude: number;
-  roofInclinationInDegrees: number;
-  roofOrientation: 'N' | 'W' | 'S' | 'E' | 'NW' | 'NE' | 'SW' | 'SE';
+  roofInclinationInDegrees: RoofInclination;
+  roofOrientation: RoofOrientation;
 }
 
-const handler: Handler = (
-  { queryStringParameters }: { queryStringParameters: SimulateQueryParams },
+const handler: Handler = async (
+  {
+    queryStringParameters: {
+      monthlyBillInEuro,
+      latitude,
+      longitude,
+      roofInclinationInDegrees,
+      roofOrientation,
+    },
+  }: { queryStringParameters: SimulateQueryParams },
   _: Context,
   callback: Callback,
 ) => {
-  // TODO: Simulate the necessary setup given queryStringParameters
+  try {
+    const customerConsumptionInKWh = computeYearlyConsumptionInKWh(monthlyBillInEuro);
+    const locationMeanYearlyRadiation = await getLocationMeanYearlyRadiation(latitude, longitude);
 
-  callback(undefined, {
-    statusCode: 200,
-    body: JSON.stringify({ queryStringParameters }),
-  });
+    const panelYearlyProductionInKWh = computePanelYearlyProductionInKWh(
+      locationMeanYearlyRadiation,
+      roofOrientation,
+      roofInclinationInDegrees,
+    );
+
+    const estimatedPanelCount = Math.ceil(customerConsumptionInKWh / panelYearlyProductionInKWh);
+
+    callback(undefined, {
+      statusCode: 200,
+      body: JSON.stringify({
+        estimatedPanelCount,
+        yearlyProducedEnergyInKWh: estimatedPanelCount * panelYearlyProductionInKWh,
+      }),
+    });
+  } catch (error: any) {
+    callback(error);
+  }
 };
 export { handler };

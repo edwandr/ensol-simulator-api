@@ -1,10 +1,10 @@
 import { RoofInclination, RoofOrientation } from '../types';
 
 // Panel: DualSun Flash 425 Shingle Black
-export const SYSTEM_EFFICENCY_PERCENTAGE = 0.8;
-export const PANEL_AREA_IN_M2 = 2.08;
-export const PANEL_PHOTOVOLTAIC_EFFICIENCY_PERCENTAGE = 0.2;
-export const PANEL_EFFICIENCY_LOSSES_PERCENTAGES: {
+const SYSTEM_EFFICENCY_PERCENTAGE = 0.8;
+const PANEL_AREA_IN_M2 = 2.08;
+const PANEL_PHOTOVOLTAIC_EFFICIENCY_PERCENTAGE = 0.2;
+const PANEL_EFFICIENCY_LOSSES_PERCENTAGES: {
   [orientation: string]: {
     [inclination: string]: number;
   };
