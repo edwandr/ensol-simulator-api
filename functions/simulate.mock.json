@@ -1,0 +1,9 @@
+{
+  "queryStringParameters": {
+    "monthlyBillInEuro": 200,
+    "latitude": 43.684405,
+    "longitude": 7.0111771,
+    "roofInclinationInDegrees": 30,
+    "roofOrientation": "S"
+  }
+}

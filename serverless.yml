@@ -8,3 +8,12 @@ provider:
 
 plugins:
   - serverless-plugin-typescript
+
+functions:
+  simulate:
+    handler: functions/simulate.handler
+    url: true
+    events:
+      - httpApi:
+          path: /simulate
+          method: get
