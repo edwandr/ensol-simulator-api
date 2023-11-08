@@ -26,6 +26,7 @@ Response
 {
   estimatedPanelCount: number;
   yearlyProducedEnergyInKWh: number;
+  estimatedCosts: number;
 }
 ```
 

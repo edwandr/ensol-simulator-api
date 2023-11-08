@@ -1,5 +1,6 @@
 import { Callback, Context, Handler } from 'aws-lambda';
 import { computeYearlyConsumptionInKWh } from '../services/comsuption';
+import { computeCostsInEuro } from '../services/costs';
 import { computePanelYearlyProductionInKWh } from '../services/production';
 import { getLocationMeanYearlyRadiation } from '../third-parties/pvgis';
 import { RoofInclination, RoofOrientation } from '../types';
@@ -42,6 +43,7 @@ const handler: Handler = async (
       body: JSON.stringify({
         estimatedPanelCount,
         yearlyProducedEnergyInKWh: estimatedPanelCount * panelYearlyProductionInKWh,
+        estimatedCosts: computeCostsInEuro(estimatedPanelCount),
       }),
     });
   } catch (error: any) {
